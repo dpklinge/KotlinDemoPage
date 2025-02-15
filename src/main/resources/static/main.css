@@ -1,0 +1,118 @@
+h1{
+	transition: text-shadow 1s;
+	
+}
+p{
+	margin-block-start: .4em;
+    margin-block-end: .4em;
+}
+h1:hover{
+	text-shadow:0px 0px 8px black;
+	transition: text-shadow 1s;
+	
+}
+#dynamicResults{
+	overflow:scroll;
+	height:300px;
+}
+.centered {
+	text-align: center;
+}
+.hidden{
+	display:none;
+}
+.flex{
+	display:flex;
+	border-style:solid;
+	border-radius:4px;
+	box-shadow: 0px 0px 2px 2px darkgrey;
+	margin:5px;
+	padding: 5px;
+	justify-content:center;
+}
+.robot {
+	height: 200px;
+}
+
+.arena{
+	width:1000px;
+	height: 100px;
+	padding:13%;
+	padding-bottom: 200px;
+	border-style:solid;
+	border-radius:50%;
+	box-shadow: 0px 0px 5px 5px black;
+}
+.left, .right{
+	width:45%;
+	border-style:solid;
+	border-radius:4px;
+	box-shadow: 0px 0px 2px 2px darkgrey;
+	margin:5px;
+	padding: 5px;
+}
+input[type=submit], button{
+	
+	border-radius: 2px;
+	box-shadow: 4px 4px 2px 2px darkgrey;
+	transition: border-radius 1s, box-shadow 1s;
+}
+
+input[type=submit]:hover, button:hover{
+	
+	border-radius: 12px;
+	box-shadow: -4px -4px 5px 5px black;
+	transition: border-radius 3s, box-shadow 3s;
+}
+
+.floatLeft{
+	float:left;
+	margin-left:50px;
+}
+.floatRight{
+	float:right;
+	margin-right:50px;
+}
+
+.shake{
+	-webkit-animation: shake .4s ease 0s 1 normal forwards; /* Safari 4.0 - 8.0 */
+    animation: shake .4s ease 0s 1 normal forwards;
+}
+
+@-webkit-keyframes shake {
+     10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+@keyframes shake {
+    10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+

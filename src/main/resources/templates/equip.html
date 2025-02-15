@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>Weapon Purchasing</title>
+  <link rel="stylesheet" th:href="@{/main.css}">
+</head>
+<body>
+<div class="centered flex">
+  <div class="left">
+    <p th:text="${sellError}"></p>
+    <p>Equipped: <span th:text="${robot.weapon.description}"></span></p>
+    <p>Multiplier: <span th:text="${robot.weapon.damageMultiplier}"></span></p>
+    <p></p>
+    <p>Weapon Inventory:</p>
+    <th:block th:each="item, iterStat : ${inventory}">
+      <form action="equipWeapon" method="POST">
+        <p th:text="${item.description}"></p>
+        <p th:text="${item.damageMultiplier} + ' Multiplier'"></p>
+        <p th:text="${#numbers.formatInteger(item.value * 0.4, 0)} + ' Sell value'"></p>
+        <input class="hidden" name="weaponIndex" type="text" th:value="${iterStat.index}" />
+        <p>   </p>
+        <input type="submit" value="Equip" />
+      </form>
+      <form action="sellWeapon" method="POST">
+        <input class="hidden" name="weaponIndex" type="text" th:value="${iterStat.index}" />
+        <input type="submit" value="Sell" />
+      </form>
+    </th:block>
+  </div>
+  <div class="right">
+    <p>Your funds: <span th:text="${money}"></span>g</p>
+    <p th:text="${error}"></p>
+
+    <th:block th:each="weapon, iterStat : ${weaponsForSale}">
+      <form action="buyWeapon" method="POST">
+        <p th:text="${weapon.description}"></p>
+        <p th:text="${weapon.damageMultiplier} + ' Multiplier'"></p>
+        <p th:text="${weapon.value} + 'g'"></p>
+        <input class="hidden" name="weaponIndex" type="text" th:value="${iterStat.index}" />
+        <p></p>
+        <input type="submit" value="Buy" />
+      </form>
+    </th:block>
+
+    <p>Store updates at: <span th:text="${timeToUpdate}"></span></p>
+  </div>
+</div>
+<form action="home">
+  <input type="submit" value="Return to home" />
+</form>
+</body>
+</html>

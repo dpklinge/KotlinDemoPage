@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Arena menu</title>
+    <link rel="stylesheet" th:href="@{/main.css}">
 </head>
 <body>
-    <h1>Welcome to this page, if it shows up</h1>
+<div class="centered">
+    <h1>Welcome to the Robot Arena!</h1>
+    <p th:text="${newGame}"></p>
+</div>
+<br />
+<div class="centered">
+    <p th:text="${noRobotError}"></p>
+    <form action="build">
+        <input type="submit" value="Upgrade your robot!" /> <br />
+    </form>
+    <br/>
+    <form action="fight">
+        <input type="submit" value="Fight with your robot!" /> <br />
+    </form>
+</div>
+<div class="centered">
+    <br />
+    <form action="equip">
+        <input type="submit" value="Purchase/equip weapons!" />
+    </form>
+</div>
+<div class="centered">
+    <br />
+    <form action="newGame">
+        <input type="submit" value="Start a new game!" />
+    </form>
+</div>
 </body>
 </html>

@@ -1,0 +1,11 @@
+
+
+
+server:
+    port: 9252
+    address: "0.0.0.0"
+spring:
+    jackson:
+        kotlin-module-enabled: true
+    application:
+        name: "sampler"
