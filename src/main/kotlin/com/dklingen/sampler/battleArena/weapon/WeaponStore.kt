@@ -34,7 +34,7 @@ public class WeaponStore (
 	fun   checkForNewInventory(achievedLevel: DifficultyClass?): List<RobotWeapon> {
 		val storeLevel = achievedLevel ?: DifficultyClass.NONE
 
-		if (LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).compareTo(time.plus(2L, ChronoUnit.MINUTES)) >= 0||storeLevel != achievedLevel) {
+		if (LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).compareTo(time.plus(1L, ChronoUnit.MINUTES)) >= 0||storeLevel != achievedLevel) {
 			inventory = mutableListOf()
 			for (i in 0..< listSize) {
 				if(random.nextDouble()<bossWeaponChance && bossesBeatenLevel != DifficultyClass.NONE){

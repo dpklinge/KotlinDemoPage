@@ -31,7 +31,7 @@ public class ShopController(
 		val weaponStore = session.getAttribute("weaponStore") as? WeaponStore?: throw RuntimeException("Error retrieving weapon store")
 		val achievedLevel: DifficultyClass = session.getAttribute("victoryLevel") as DifficultyClass
 		val weaponList: List<RobotWeapon> 
-		if(firstVisit){
+		if(firstVisit|| achievedLevel != weaponStore.storeLevel){
 			firstVisit=false
 			weaponList = weaponStore.forceUpdate(achievedLevel)
 		}else{

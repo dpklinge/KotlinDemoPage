@@ -49,8 +49,10 @@ data class RobotWeapon (
 			"Strong"
 		} else if (damageMultiplier < 2) {
 			"Powerful"
-		} else {
+		} else if (damageMultiplier < 2.5) {
 			"Devastating"
+		} else {
+			"Divine"
 		}
 	}
 }

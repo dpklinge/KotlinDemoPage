@@ -73,6 +73,20 @@ input[type=submit]:hover, button:hover{
 	float:right;
 	margin-right:50px;
 }
+.jackpot{
+   box-shadow: 0px 0px 10px 3px rgb(230, 230, 80);
+}
+.paralyzed{
+   box-shadow: 0px 0px 3px 3px rgb(100, 100, 200);
+}
+.vampirism{
+   color: rgb(255, 0, 0);
+}
+.critical{
+   color: rgb(20, 150, 0);
+   box-shadow: 0px 0px 3px 3px rgb(100, 100, 0);
+}
+.gold {color: rgb(200, 200, 50);}
 
 .shake{
 	-webkit-animation: shake .4s ease 0s 1 normal forwards; /* Safari 4.0 - 8.0 */

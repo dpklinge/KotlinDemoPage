@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component
 
 import java.util.Random
 const val turnspeed = 100
-fun getMaxSpeed() = turnspeed
 
 @Component
 class Battle(
@@ -48,8 +47,7 @@ class Battle(
 
 	fun attemptStrike( attacker: BattleRobot, defender: BattleRobot, results: BattleResults) {
 		if (attacker.isParalyzed) {
-			results.addToLog(attacker.name + " was paralyzed by " + defender.name + "'s "
-					+ defender.weapon.description + " and could not attack!")
+			results.addToLog("<span class='paralyzed'>${attacker.name} was paralyzed by ${defender.name}'s ${defender.weapon.description} and could not attack!</span>")
 			attacker.isParalyzed=false
 		} else if (attacker.weapon.weaponEffects.containsKey(EffectType.INNACURATE)) {
 			val hitRoll = random.nextDouble()
@@ -90,7 +88,7 @@ class Battle(
 
 		if (random.nextDouble() < (weaponEffect.effectStrength * 0.5)) {
 			results.addToLog(
-					attacker.name + "'s weapon paralyzes " + defender.name + "! They cannot attack!")
+					"<span class='paralyzed'>${attacker.name}'s weapon paralyzes ${defender.name}! They cannot attack!</span>")
 			defender.isParalyzed = true
 		}
 	}
@@ -130,7 +128,9 @@ class Battle(
 			applyGoldLeech(attacker, damage, attacker.weapon.weaponEffects[EffectType.GOLD_GAINING]!!,
 					defender, results)
 		}
-		applyVampirism(damage, attacker, defender, results)
+		if(attacker.weapon.weaponEffects.containsKey(EffectType.VAMPIRISM)) {
+			applyVampirism(damage, attacker, defender, results)
+		}
 
 	}
 
@@ -148,12 +148,12 @@ class Battle(
 			results: BattleResults): Double {
 		val rand = random.nextDouble()
 		var newDamage:Double = damage
-		if (rand < 0.10) {
+		if (rand < 0.15) {
 			results.addToLog("Chaotic weapon dealt reduced damage!")
 			newDamage -= newDamage * weaponEffect.effectStrength
-		}else if (rand < 0.20) {
-			results.addToLog("Chaotic weapon had no special effect.")
 		}else if (rand < 0.25) {
+			results.addToLog("Chaotic weapon had no special effect.")
+		}else if (rand < 0.30) {
 			results.addToLog("Chaotic weapon dealt increased damage!")
 			newDamage += newDamage * weaponEffect.effectStrength
 		} else if (rand < 0.35) {
@@ -169,7 +169,7 @@ class Battle(
 			results.addToLog("Chaotic weapon vampirically leaches the enemy!")
 			applyVampirism(newDamage, attacker, defender, results)
 		} else if (rand < 0.75) {
-			results.addToLog("Chaotic weapon deals a critical hit!")
+			results.addToLog("Chaotic weapon strikes with a chance for a critical hit!")
 			newDamage = applyCriticals(newDamage, weaponEffect, defender, results)
 		} else if (rand < 0.85) {
 			if (attacker == results.attacker) {
@@ -180,29 +180,26 @@ class Battle(
 			results.addToLog("Chaotic damage fluctuates wildly!")
 			newDamage = (random.nextDouble() * 3 * newDamage)
 		} else {
-			results.addToLog("******JACKPOT!******")
-			results.addToLog("Gold overflows from your chaotic weapon!")
+			results.addToLog("<span class='jackpot'>******JACKPOT!******</span>")
+			results.addToLog("<span class='jackpot'>Gold overflows from your chaotic weapon!</span>")
 			results.updateWinnings(attacker, 10000)
 		}
 		return newDamage
 	}
 
 	fun applyVampirism(damage: Double , attacker: BattleRobot, defender: BattleRobot, results: BattleResults) {
-		if (attacker.weapon.weaponEffects.containsKey(EffectType.VAMPIRISM)) {
-			var healing = (damage * (attacker.weapon.weaponEffects[EffectType.VAMPIRISM]?.effectStrength?:0.0))
-			if (healing < 1) {
-				healing = 1.0
-			}
-			val newHealth = (attacker.currentHealth + healing)
-			if (newHealth > attacker.maxHealth) {
-				attacker.currentHealth = attacker.maxHealth
-				results.addToLog(attacker.name + " vampirically healed to full health! ")
-			} else {
-				attacker.currentHealth = attacker.currentHealth + healing.toInt()
-				results.addToLog(attacker.name + " vampirically healed " + healing.toInt() + "! ")
-			}
+		var healing = (damage * (attacker.weapon.weaponEffects[EffectType.VAMPIRISM]?.effectStrength?:0.0))
+		if (healing < 1) {
+			healing = 1.0
 		}
-
+		val newHealth = (attacker.currentHealth + healing)
+		if (newHealth > attacker.maxHealth) {
+			attacker.currentHealth = attacker.maxHealth
+			results.addToLog("<span class='vampirism'>${attacker.name} vampirically healed to full health! </span>")
+		} else {
+			attacker.currentHealth = attacker.currentHealth + healing.toInt()
+			results.addToLog("<span class='vampirism'>${attacker.name} vampirically healed ${healing.toInt()}! </span>")
+		}
 	}
 
 	fun applyGoldLeech(attacker: BattleRobot, damage: Double , weaponEffect: WeaponEffect, defender: BattleRobot,
@@ -212,7 +209,7 @@ class Battle(
 			val moneyGain = (damage * weaponEffect.effectStrength)
 			System.out.println("Money leeched by gold leech: $moneyGain")
 			if (moneyGain > 0) {
-				results.addToLog("Thrifty weapon extracts " + moneyGain + "g from foe.")
+				results.addToLog("<span class='gold'>Thrifty weapon extracts ${moneyGain.toInt()}g from foe.</span>")
 				results.updateWinnings(attacker,  moneyGain.toInt())
 				System.out.println("Potential winnings after gold leech: " + results.getWinnings(attacker))
 			}
@@ -250,7 +247,7 @@ class Battle(
 	fun applyCriticals(damage: Double , effect: WeaponEffect, defender: BattleRobot, results: BattleResults): Double {
 		var newDamage = damage
 		if (random.nextDouble() < (effect.effectStrength)) {
-			results.addToLog("Critical hit! ")
+			results.addToLog("<span class='critical'>Critical hit! </span>")
 			newDamage *= 1.5
 		}
 		return newDamage
@@ -262,7 +259,7 @@ class Battle(
 		val bonusDamage = defender.value * percentValueDamage
 		newDamage += bonusDamage
 		results.updateWinnings(attacker, -bonusDamage.toInt())
-		results.addToLog("Expensive weapon converts $bonusDamage potential winnings to boost damage!")
+		results.addToLog("Expensive weapon converts ${bonusDamage.toInt()} potential winnings to boost damage!")
 		return newDamage
 
 	}

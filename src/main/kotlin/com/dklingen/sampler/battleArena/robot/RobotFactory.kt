@@ -1,7 +1,5 @@
 package com.dklingen.sampler.battleArena.robot
 
-import com.dklingen.sampler.battleArena.Battle
-import com.dklingen.sampler.battleArena.getMaxSpeed
 import com.dklingen.sampler.battleArena.weapon.RobotWeapon
 import com.dklingen.sampler.battleArena.weapon.WeaponFactory
 import org.apache.commons.lang3.RandomStringUtils
@@ -14,29 +12,44 @@ import java.util.Random
 class RobotFactory @Autowired constructor(private val factory: WeaponFactory) {
 	private val random = Random()
 	private val goldenRobotChance = 0.04
-	private val bossChance = 0.02
+	private val bossChance = 0.04
 
 	fun generateRobotName(robot: BattleRobot): String {
 		var name = RandomStringUtils.randomAlphanumeric(3, random.nextInt(5) + 3) + " the"
 
 		when {
+			robot.maxHealth > 8000 -> name += " Colossal"
+			robot.maxHealth > 4000 -> name += " Imposing"
 			robot.maxHealth > 2000 -> name += " Robust"
 			robot.maxHealth > 1000 -> name += " Sturdy"
 			robot.maxHealth < 200 -> name += " Frail"
 		}
 
 		when {
+			robot.armor > 800 -> name += " Unstoppable"
+			robot.armor > 400 -> name += " Impenetrable"
+			robot.armor > 200 -> name += " Adamant"
+			robot.armor > 100 -> name += " Armored"
 			robot.armor > 50 -> name += " Tanky"
 			robot.armor < 20 -> name += " Fragile"
 		}
 
 		when {
-			robot.speed > 50 -> name += " Swift"
+			robot.speed > 800 -> name += " Lightning"
+			robot.speed > 400 -> name += " Mercurial"
+			robot.speed > 200 -> name += " Fleet"
+			robot.speed > 100 -> name += " Swift"
+			robot.speed > 50 -> name += " Quick"
+			robot.speed > 35 -> name += " Normal"
 			robot.speed < 20 -> name += " Slow"
 		}
 
 		when {
-			robot.strength > 50 -> name += " Crusher"
+			robot.strength > 800 -> name += " Unstoppable"
+			robot.strength > 400 -> name += " Overpowering"
+			robot.strength > 200 -> name += " Fearsome"
+			robot.strength > 100 -> name += " Strong"
+			robot.strength > 50 -> name += " Typical"
 			robot.strength < 20 -> name += " Weak"
 		}
 
@@ -105,7 +118,7 @@ class RobotFactory @Autowired constructor(private val factory: WeaponFactory) {
 					this.maxHealth = (maxHealth * 1.3).toInt()
 					this.speed = (speed * 1.3).toInt()
 					this.strength = (strength * 1.3).toInt()
-					this.value = value * 2 + 1000
+					this.value = value * 3 + 1000
 				}
 			}
 		}
@@ -118,6 +131,6 @@ class RobotFactory @Autowired constructor(private val factory: WeaponFactory) {
 	fun generateHardEnemy() = generateEnemy(30, 20, 30, 50, 30, 50, 500, 1000, 1.0, null, DifficultyClass.STRONG)
 	fun generateLegendaryEnemy() = generateEnemy(50, 50, 50, 100, 50, 100, 1000, 2000, 1.25, null, DifficultyClass.LEGENDARY)
 	fun generateGodlikeEnemy() = generateEnemy(
-		getMaxSpeed(), 0, 250, 0, 250, 0, 10000, 0, 1.5, "God Incarnate", DifficultyClass.GODLIKE
+		250, 600, 250, 600, 250, 600, 5000, 15000, 1.5, "God Incarnate", DifficultyClass.GODLIKE
 	)
 }

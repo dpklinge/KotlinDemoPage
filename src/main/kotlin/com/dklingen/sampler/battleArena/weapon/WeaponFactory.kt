@@ -12,7 +12,7 @@ import java.util.Random
 
 @Component
 public class WeaponFactory (val random: Random = Random()){
-	val weaponNames = listOf("Torcher", "Slicer", "Basher", "Clobberer", "Tickler", "Stabber", "Frier", "Masher", "Smasher", "Crusher")
+	val weaponNames = listOf("Torcher", "Slicer", "Basher", "Clobberer", "Tickler", "Stabber", "Frier", "Masher", "Smasher", "Crusher", "Stomper", "Sticker", "Slasher", "Cutter", "Cruncher", "Burner", "Bruiser", "Ducky")
 
 
 	val npcEffects = listOf(ARMOR_PIERCE, CRITICAL_HITS, INNACURATE, VAMPIRISM, RECOIL, CHAOTIC, PARALYSIS, DOUBLE_STRIKE)
@@ -20,20 +20,19 @@ public class WeaponFactory (val random: Random = Random()){
 	val pcEffects = EffectType.values().asList()
 
 	fun  getWeapon(minEffectNumber: Int, randomExtraEffectMax: Int, minEffectStrength: Double,
-			 effectStrengthMax: Double, damageMultiplierMin: Double, randomExtraDamageMultiplier: Double,
+			 maxAddedEffectStrength: Double, damageMultiplierMin: Double, randomExtraDamageMultiplier: Double,
 			 isPc: Boolean): RobotWeapon {
 		val effectNumber = random.nextInt(randomExtraEffectMax + 1) + minEffectNumber
-		val effectPercent = random.nextDouble() * effectStrengthMax + minEffectStrength
+		val effectPercent = random.nextDouble() * maxAddedEffectStrength + minEffectStrength
 		val damageMultiplier = damageMultiplierMin + (random.nextDouble() * randomExtraDamageMultiplier)
 		val generatedEffects: MutableMap<EffectType, WeaponEffect> = mutableMapOf()
 		for (i in 0..<effectNumber) {
-			var effect: WeaponEffect
-			if (isPc) {
-				effect = generateEffect(effectPercent, generatedEffects, pcEffects)
+			val effect = if (isPc) {
+				generateEffect(effectPercent, generatedEffects, pcEffects)
 			} else {
-				effect = generateEffect(effectPercent, generatedEffects, npcEffects)
+				generateEffect(effectPercent, generatedEffects, npcEffects)
 			}
-			generatedEffects.put(effect.type, effect)
+			generatedEffects[effect.type] = effect
 		}
 		return RobotWeapon(damageMultiplier = roundToDecimalPlaces(damageMultiplier, 2), weaponEffects = generatedEffects, name = generateName())
 	}
@@ -111,7 +110,7 @@ public class WeaponFactory (val random: Random = Random()){
 
 			CHAOTIC -> {
 				multiplier = (1 + (0.25 * effectPercent))
-				goldValue = (500.0 * effectPercent)
+				goldValue = (1000.0 * effectPercent)
 			}
 
 			GOLD_GAINING -> {
@@ -164,40 +163,40 @@ public class WeaponFactory (val random: Random = Random()){
 	}
 
 	fun getWeakBossWeapon(isNpc:Boolean): RobotWeapon {
-		val weapon: RobotWeapon = getWeapon(1, 0, .25, 0.0, 1.25, 0.0, isNpc)
+		val weapon: RobotWeapon = getWeapon(1, 0, .15, 0.15, 1.25, 0.0, isNpc)
 		bossNameReplace(weapon)
 		weapon.value = weapon.value*3
 		return weapon
 	}
 	
 	fun bossNameReplace(weapon: RobotWeapon) {
-		weapon.description = (weapon.description.replace("Ineffectual", "Boss").replace("Weak", "Boss").replace("Average", "Boss").replace("Strong", "Boss").replace("Powerful", "Boss").replace("Devastating", "Boss"))
+		weapon.description = (weapon.description.replace("Ineffectual", "Ineffectual Boss").replace("Weak", "Weak Boss").replace("Average", "Average Boss").replace("Strong", "Strong Boss").replace("Powerful", "Powerful Boss").replace("Devastating", "Devastating Boss").replace("Divine", "Divine Boss"))
 		
 	}
 
 	fun getMediumBossWeapon(isPc: Boolean): RobotWeapon {
-		val weapon: RobotWeapon = getWeapon(1, 1, 0.5, 0.0, 1.35, 0.0, isPc)
+		val weapon: RobotWeapon = getWeapon(1, 1, 0.35, 0.25, 1.35, 0.1, isPc)
 		bossNameReplace(weapon)
 		weapon.value = weapon.value*3
 		return weapon
 	}
 
 	fun getStrongBossWeapon(isPc: Boolean): RobotWeapon {
-		val weapon: RobotWeapon = getWeapon(2, 0, .6, 0.0, 1.7, 0.0, isPc)
+		val weapon: RobotWeapon = getWeapon(2, 0, .5, 0.25, 1.7, 0.2, isPc)
 		bossNameReplace(weapon)
 		weapon.value = weapon.value*3
 		return weapon
 	}
 
 	fun getLegendaryBossWeapon(isPc: Boolean): RobotWeapon {
-		val weapon: RobotWeapon = getWeapon(2, 1, .8, 0.0 , 2.0, .5, isPc)
+		val weapon: RobotWeapon = getWeapon(2, 1, .6, 0.4 , 2.0, .5, isPc)
 		bossNameReplace(weapon)
 		weapon.value = weapon.value*3
 		return weapon
 	}
 
 	fun getGodlikeBossWeapon(isPc: Boolean): RobotWeapon {
-		val weapon: RobotWeapon = getWeapon(3, 0, 1.0, 0.0, 2.5, 1.0, isPc)
+		val weapon: RobotWeapon = getWeapon(2, 2, .8, .7, 2.5, 1.0, isPc)
 		bossNameReplace(weapon)
 		weapon.value = weapon.value*3
 		return weapon
